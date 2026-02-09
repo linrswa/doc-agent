@@ -314,6 +314,8 @@ doc-agent/
 │   ├── shared-rules.md      # Shared rules (loaded by agents at startup)
 │   ├── doc-writer.md        # Writer agent
 │   └── doc-reviewer.md      # Reviewer agent
+├── hooks/
+│   └── check-block-list.py  # PreToolUse hook for block list enforcement
 ├── skills/
 │   ├── doc-manage/
 │   │   └── SKILL.md         # Documentation coordinator skill

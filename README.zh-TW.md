@@ -312,6 +312,8 @@ doc-agent/
 │   ├── shared-rules.md      # 共享規則（代理啟動時載入）
 │   ├── doc-writer.md        # 寫代理
 │   └── doc-reviewer.md      # 審查代理
+├── hooks/
+│   └── check-block-list.py  # 排除清單的 PreToolUse hook
 ├── skills/
 │   ├── doc-manage/
 │   │   └── SKILL.md         # 文件協調技能
