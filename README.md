@@ -1,16 +1,19 @@
-# doc-agent
+# 📝 doc-agent
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Claude Code Plugin](https://img.shields.io/badge/Claude_Code-Plugin-blue.svg)](https://claude.com/claude-code)
 
 [繁體中文](README.zh-TW.md)
 
 Automatically manage documentation with multiple agents — bridging the gap between implementation and your mental model.
 
-## Why doc-agent?
+## 🤔 Why doc-agent?
 
 In the era of AI-assisted development, code is being written faster than ever. But speed creates a gap — the implementation moves forward while your understanding of it may not. Without a reliable way to verify what was actually built, it's easy for code to silently drift from your intended architecture.
 
 doc-agent bridges this gap. It lets AI agents automatically generate documentation **grounded in actual source code**, with every claim backed by `file:line` citations. This isn't documentation for documentation's sake — it's a verification tool. By reading the generated docs, you can quickly check whether the implementation aligns with your mental model, catch architectural drift early, and maintain confidence in a rapidly evolving codebase.
 
-## Features
+## ✨ Features
 
 - **Coordinated Workflow**: `/doc-manage` skill orchestrates doc-writer and doc-reviewer agents with built-in task tracking
 - **Context-Aware**: The skill has full conversation context to understand what you just built
@@ -19,7 +22,7 @@ doc-agent bridges this gap. It lets AI agents automatically generate documentati
 - **Quality Gating**: Structured review with PASS/REVISE/BLOCKED verdicts
 - **Project Adaptability**: Project-specific considerations via configuration
 
-## Components
+## 🧩 Components
 
 ### Skills
 
@@ -35,7 +38,7 @@ doc-agent bridges this gap. It lets AI agents automatically generate documentati
 | `doc-agent:doc-writer` | Explores codebase, writes documentation with citations |
 | `doc-agent:doc-reviewer` | Reviews documentation quality, verifies citations |
 
-## Installation
+## 📦 Installation
 
 ### Option 1: Development Mode (Temporary)
 
@@ -111,7 +114,7 @@ Expected output:
     Status: ✔ enabled
 ```
 
-## Updating the Plugin
+## 🔄 Updating the Plugin
 
 Since the plugin is symlinked, just pull the latest changes and update:
 
@@ -123,7 +126,7 @@ claude plugin update doc-agent@local
 
 Then restart your Claude Code session to apply changes.
 
-## Usage
+## 🚀 Usage
 
 ### Quick Start
 
@@ -166,7 +169,7 @@ This creates `.doc-agents/dispatch-templates.md` with YAML templates for each mo
 5. `/doc-manage` sends to doc-reviewer agent for quality verification
 6. Iterate until PASS or max revisions (2) reached; escalate if blocked
 
-## Working Directory
+## 📁 Working Directory
 
 All working files are stored in `.doc-agents/` at the project root:
 
@@ -178,7 +181,7 @@ All working files are stored in `.doc-agents/` at the project root:
 
 Progress tracking uses Claude's built-in Task tools (`TaskCreate`, `TaskUpdate`, `TaskList`) instead of a file.
 
-## Documentation Structure
+## 📄 Documentation Structure
 
 Generated documentation follows a standardized structure:
 
@@ -201,7 +204,7 @@ Data Flow and Troubleshooting can be marked "Not Applicable" with valid justific
 **Not Applicable**: This module is a pure utility library with stateless functions.
 ```
 
-## Citation Requirements
+## 🔗 Citation Requirements
 
 Citations scale dynamically based on module size:
 
@@ -221,7 +224,7 @@ Citations scale dynamically based on module size:
 | Section anchor | 0.5 | `docs/api.md#authentication` |
 | External spec | 0.5 | `[RFC-7231] url#section` |
 
-## Configuration
+## ⚙️ Configuration
 
 ### Project-Specific Considerations
 
@@ -248,7 +251,7 @@ Create `.doc-agents/project-special-consider.md` to customize for your project:
 - Document environment variables in Overview section
 ```
 
-## Plugin Structure
+## 🏗️ Plugin Structure
 
 ```
 doc-agent/
@@ -266,6 +269,6 @@ doc-agent/
 └── LICENSE
 ```
 
-## License
+## 📜 License
 
 MIT

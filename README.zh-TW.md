@@ -1,14 +1,17 @@
-# doc-agent
+# 📝 doc-agent
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Claude Code Plugin](https://img.shields.io/badge/Claude_Code-Plugin-blue.svg)](https://claude.com/claude-code)
 
 透過多代理自動管理文件——讓實作與你的心智模型保持連結。
 
-## 為什麼需要 doc-agent？
+## 🤔 為什麼需要 doc-agent？
 
 在 AI 輔助開發的時代，程式碼的產出速度前所未有。但速度帶來了落差——實作不斷推進，你對它的理解卻未必跟上。如果沒有可靠的方式來驗證實際建構的內容，程式碼很容易在不知不覺中偏離你預期的架構。
 
 doc-agent 正是為了填補這個落差而生。它讓 AI 代理自動產生**以實際原始碼為根據**的文件，每個描述都附上 `file:line` 引用。這不是為了寫文件而寫文件——而是一個驗證工具。透過閱讀產生的文件，你可以快速確認實作是否與你腦中的架構一致、及早發現架構偏移，並在快速演進的程式碼庫中維持信心。
 
-## 功能特色
+## ✨ 功能特色
 
 - **協調式工作流程**：`/doc-manage` 技能協調 doc-writer 和 doc-reviewer 代理，內建任務追蹤
 - **上下文感知**：技能具有完整的對話上下文，能理解你剛才建構的內容
@@ -17,7 +20,7 @@ doc-agent 正是為了填補這個落差而生。它讓 AI 代理自動產生**�
 - **品質把關**：結構化審查，提供 PASS/REVISE/BLOCKED 判定結果
 - **專案適應性**：透過設定檔進行專案特定的客製化
 
-## 元件
+## 🧩 元件
 
 ### 技能
 
@@ -33,7 +36,7 @@ doc-agent 正是為了填補這個落差而生。它讓 AI 代理自動產生**�
 | `doc-agent:doc-writer` | 探索程式碼庫，寫附有引用的文件 |
 | `doc-agent:doc-reviewer` | 審查文件品質，驗證引用 |
 
-## 安裝
+## 📦 安裝
 
 ### 選項一：開發模式（暫時性）
 
@@ -109,7 +112,7 @@ claude plugin list
     Status: ✔ enabled
 ```
 
-## 更新外掛
+## 🔄 更新外掛
 
 由於外掛是透過符號連結安裝的，只需拉最新變更並更新：
 
@@ -121,7 +124,7 @@ claude plugin update doc-agent@local
 
 然後重新啟動 Claude Code 工作階段以套用變更。
 
-## 使用方式
+## 🚀 使用方式
 
 ### 快速開始
 
@@ -164,7 +167,7 @@ Claude 會主動使用 `/doc-manage` 來更新文件。
 5. `/doc-manage` 將文件送交 doc-reviewer 代理進行品質驗證
 6. 重複修改直到通過（PASS）或達到最大修訂次數（2 次）；無法解決則上報使用者
 
-## 工作目錄
+## 📁 工作目錄
 
 所有工作檔案儲存在專案根目錄的 `.doc-agents/` 中：
 
@@ -176,7 +179,7 @@ Claude 會主動使用 `/doc-manage` 來更新文件。
 
 進度追蹤使用 Claude 內建的 Task 工具（`TaskCreate`、`TaskUpdate`、`TaskList`），而非檔案。
 
-## 文件結構
+## 📄 文件結構
 
 產生的文件遵循標準化結構：
 
@@ -199,7 +202,7 @@ Claude 會主動使用 `/doc-manage` 來更新文件。
 **不適用**：此模組為純工具函式庫，包含無狀態函式。
 ```
 
-## 引用要求
+## 🔗 引用要求
 
 引用會根據模組大小動態調整：
 
@@ -219,7 +222,7 @@ Claude 會主動使用 `/doc-manage` 來更新文件。
 | 章節錨點 | 0.5 | `docs/api.md#authentication` |
 | 外部規範 | 0.5 | `[RFC-7231] url#section` |
 
-## 設定
+## ⚙️ 設定
 
 ### 專案特定考量
 
@@ -246,7 +249,7 @@ Claude 會主動使用 `/doc-manage` 來更新文件。
 - 在概述章節中記錄環境變數
 ```
 
-## 外掛結構
+## 🏗️ 外掛結構
 
 ```
 doc-agent/
@@ -265,6 +268,6 @@ doc-agent/
 └── LICENSE
 ```
 
-## 授權條款
+## 📜 授權條款
 
 MIT
