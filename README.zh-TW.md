@@ -19,6 +19,8 @@ doc-agent 正是為了填補這個落差而生。它讓 AI 代理自動產生**�
 - **動態門檻**：引用要求會隨模組大小動態調整
 - **品質把關**：結構化審查，提供 PASS/REVISE/BLOCKED 判定結果
 - **專案適應性**：透過設定檔進行專案特定的客製化
+- **排除清單**：透過 glob 模式排除不需納入文件參考的檔案
+- **共享規則**：集中式規則確保代理間的一致性
 
 ## 🧩 元件
 
@@ -173,6 +175,7 @@ Claude 會主動使用 `/doc-manage` 來更新文件。
 
 ```
 .doc-agents/
+├── block-list.md              # 排除文件參考的 glob 模式
 ├── dispatch-templates.md      # 由 /gen-dispatch 產生
 └── project-special-consider.md # 專案特定考量
 ```
@@ -224,6 +227,21 @@ Claude 會主動使用 `/doc-manage` 來更新文件。
 
 ## ⚙️ 設定
 
+### 排除清單
+
+建立 `.doc-agents/block-list.md` 來排除不需納入文件參考的檔案：
+
+```markdown
+## Patterns
+
+- `**/CLAUDE.md`
+- `node_modules/**`
+- `dist/**`
+- `**/*.test.ts`
+```
+
+符合這些模式的檔案將從程式碼地圖、資料流程、引用及相關檔案索引中排除。預設已包含 `**/CLAUDE.md`。
+
 ### 專案特定考量
 
 建立 `.doc-agents/project-special-consider.md` 來為你的專案客製化：
@@ -256,6 +274,7 @@ doc-agent/
 ├── .claude-plugin/
 │   └── plugin.json          # 外掛清單
 ├── agents/
+│   ├── shared-rules.md      # 共享規則（代理啟動時載入）
 │   ├── doc-writer.md        # 寫代理
 │   └── doc-reviewer.md      # 審查代理
 ├── skills/

@@ -24,6 +24,10 @@ This skill analyzes the current project structure and generates a `dispatch-temp
 
 When the user invokes `/gen-dispatch`, follow these steps:
 
+### Step 0: Load Block List
+
+Read `.doc-agents/block-list.md` (if it exists) and collect all glob patterns. Files matching these patterns MUST be excluded from `repo_hints` in generated templates.
+
 ### Step 1: Analyze Project Structure
 
 Explore the codebase to identify:
@@ -206,6 +210,21 @@ For each generated template, verify:
 - [ ] `scope_out` has at least 1 item
 - [ ] `repo_hints` contains only paths that exist
 - [ ] `canonical_sources` paths exist (if specified)
+
+### Block List Filtering
+
+Before finalizing output, verify no `repo_hints` paths match block list patterns:
+
+```
+BLOCK_LIST_CHECK:
+
+Template: DOC-{module}
+  repo_hints:
+    - src/module/: NOT BLOCKED
+    - dist/bundle.js: BLOCKED (matches dist/**) <-- REMOVE THIS
+
+  Result: PASS | FAIL (removed blocked entries)
+```
 
 ### Path Existence Verification
 
