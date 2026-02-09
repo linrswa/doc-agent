@@ -35,4 +35,6 @@ git tag "v$next"
 git push
 git push --tags
 
+claude plugin update doc-agent@local
+
 echo "Released $next"
