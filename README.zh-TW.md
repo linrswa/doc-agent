@@ -207,7 +207,7 @@ Claude 會主動使用 `/doc-manage` 來更新文件。
 
 ```
 .doc-agents/
-├── block-list.md              # 排除文件參考的 glob 模式
+├── block-list.json            # 排除文件參考的 glob 模式
 ├── dispatch-templates.md      # 由 /gen-dispatch 產生
 └── project-special-consider.md # 專案特定考量
 ```
@@ -261,18 +261,21 @@ Claude 會主動使用 `/doc-manage` 來更新文件。
 
 ### 排除清單
 
-建立 `.doc-agents/block-list.md` 來排除不需納入文件參考的檔案：
+建立 `.doc-agents/block-list.json` 來排除不需納入文件參考的檔案：
 
-```markdown
-## Patterns
-
-- `**/CLAUDE.md`
-- `node_modules/**`
-- `dist/**`
-- `**/*.test.ts`
+```json
+{
+  "description": "Files matching patterns below are excluded from all documentation references",
+  "patterns": [
+    "**/CLAUDE.md",
+    "node_modules/**",
+    "dist/**",
+    "**/*.test.ts"
+  ]
+}
 ```
 
-符合這些模式的檔案將從程式碼地圖、資料流程、引用及相關檔案索引中排除。預設已包含 `**/CLAUDE.md`。
+符合這些模式的檔案將從程式碼地圖、資料流程、引用及相關檔案索引中排除。預設已包含 `**/CLAUDE.md`。doc-writer 和 doc-reviewer 代理上的 `PreToolUse` hook 會在工具層級強制執行此規則。
 
 ### 專案特定考量
 

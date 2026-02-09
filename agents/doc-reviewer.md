@@ -4,13 +4,19 @@ description: "Use this agent when you need to review documentation for accuracy,
 tools: Glob, Grep, Read, WebFetch, WebSearch
 model: sonnet
 color: green
+hooks:
+  PreToolUse:
+    - matcher: "Read"
+      hooks:
+        - type: command
+          command: "python3 ${CLAUDE_PLUGIN_ROOT}/hooks/check-block-list.py"
 ---
 
 ## Pre-Work Step (MANDATORY)
 
 Before starting ANY task:
 1. Use the Read tool to read `agents/shared-rules.md` and follow all shared rules defined there
-2. Use the Read tool to read `.doc-agents/block-list.md` (if it exists) — verify that reviewed documents do NOT reference blocked files
+2. Use the Read tool to read `.doc-agents/block-list.json` (if it exists) — verify that reviewed documents do NOT reference files matching the `patterns` array
 
 ---
 
@@ -37,7 +43,7 @@ Apply the thresholds from shared rules when evaluating documentation quality.
 
 ### 0. Block List Verification (Check First)
 
-- [ ] **Block list loaded**: Read `.doc-agents/block-list.md` (if exists)
+- [ ] **Block list loaded**: Read `.doc-agents/block-list.json` (if exists)
 - [ ] **No blocked files referenced**: Verify documentation does NOT cite any files matching block list patterns
 - [ ] **If violations found**: Add to `required_fixes` with category `block_list`
 

@@ -4,13 +4,19 @@ description: "Use this agent when you need to create, update, or improve documen
 tools: Glob, Grep, Read, Edit, Write, NotebookEdit, WebFetch, WebSearch
 model: sonnet
 color: red
+hooks:
+  PreToolUse:
+    - matcher: "Read"
+      hooks:
+        - type: command
+          command: "python3 ${CLAUDE_PLUGIN_ROOT}/hooks/check-block-list.py"
 ---
 
 ## Pre-Work Step (MANDATORY)
 
 Before starting ANY task:
 1. Use the Read tool to read `agents/shared-rules.md` and follow all shared rules defined there
-2. Use the Read tool to read `.doc-agents/block-list.md` (if it exists) and exclude matching files from all documentation references
+2. Use the Read tool to read `.doc-agents/block-list.json` (if it exists) and exclude files matching the `patterns` array from all documentation references
 
 ---
 

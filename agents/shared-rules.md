@@ -4,11 +4,11 @@
 
 ## Block List
 
-Before referencing ANY file in documentation, check `.doc-agents/block-list.md` for excluded patterns.
+Before referencing ANY file in documentation, check `.doc-agents/block-list.json` for excluded patterns.
 
 ### Rules
 
-1. **Read** `.doc-agents/block-list.md` at the start of every task (skip if file doesn't exist)
+1. **Read** `.doc-agents/block-list.json` at the start of every task (skip if file doesn't exist). Parse the JSON and extract the `patterns` array
 2. Files matching any listed glob pattern MUST NOT appear in:
    - Code Map entries
    - Data Flow diagram nodes

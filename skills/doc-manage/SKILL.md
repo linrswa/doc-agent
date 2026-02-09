@@ -148,7 +148,7 @@ Dispatch documentation task to doc-writer agent.
 
 **Steps**:
 1. Load dispatch template for target module + `project-special-consider.md` if exists
-2. Load `.doc-agents/block-list.md` (if exists) and include block list patterns in the dispatch context
+2. Load `.doc-agents/block-list.json` (if exists) and include block list patterns in the dispatch context
 3. TaskUpdate: status → `in_progress`, phase → `"writing"`
 4. Dispatch to doc-writer via Task tool (`subagent_type: "doc-agent:doc-writer"`) with dispatch YAML + `extra_context` if provided
 5. Check response for config mismatch reports (see Reference)
@@ -163,7 +163,7 @@ Pass document to doc-reviewer agent for review.
 
 **Steps**:
 1. Load `project-special-consider.md` if exists
-2. Load `.doc-agents/block-list.md` (if exists) and include block list patterns in the review context
+2. Load `.doc-agents/block-list.json` (if exists) and include block list patterns in the review context
 3. TaskUpdate: phase → `"reviewing"` (if task tracking is active)
 4. Dispatch to doc-reviewer via Task tool (`subagent_type: "doc-agent:doc-reviewer"`) with review request YAML
 5. Check response for config mismatch reports (see Reference)
@@ -207,7 +207,7 @@ consistency_requirements:
   - Items that must be consistent with other documents
 
 block_list:
-  - Glob patterns from .doc-agents/block-list.md (if exists)
+  - Glob patterns from .doc-agents/block-list.json (if exists)
 
 acceptance_criteria:
   - Acceptance criteria list
@@ -222,7 +222,7 @@ review_request:
   canonical_sources:
     - {list of authoritative sources}
   block_list:
-    - Glob patterns from .doc-agents/block-list.md (if exists)
+    - Glob patterns from .doc-agents/block-list.json (if exists)
 ```
 
 ### Task Status Mapping

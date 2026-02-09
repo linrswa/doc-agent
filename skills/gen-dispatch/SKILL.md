@@ -26,7 +26,7 @@ When the user invokes `/gen-dispatch`, follow these steps:
 
 ### Step 0: Load Block List
 
-Read `.doc-agents/block-list.md` (if it exists) and collect all glob patterns. Files matching these patterns MUST be excluded from `repo_hints` in generated templates.
+Read `.doc-agents/block-list.json` (if it exists) and parse the `patterns` array. Files matching these patterns MUST be excluded from `repo_hints` in generated templates.
 
 ### Step 1: Analyze Project Structure
 
