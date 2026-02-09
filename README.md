@@ -24,6 +24,38 @@ doc-agent bridges this gap. It lets AI agents automatically generate documentati
 - **Block List**: Exclude files from documentation references via glob patterns
 - **Shared Rules**: Centralized rules for agents to ensure consistency
 
+## 🔧 How It Works
+
+```
+/gen-dispatch
+     |
+     |  scan codebase & generate templates
+     v
+.doc-agents/dispatch-templates.md
+     |
+     |  loaded by
+     v
+/doc-manage (coordinator)
+     |
+     |--- dispatch -------> doc-writer
+     |                          |
+     |                   doc with file:line
+     |                      citations
+     |                          |
+     |<-------------------------+
+     |
+     |--- review --------> doc-reviewer
+     |                          |
+     |                       verdict
+     |                          |
+     |<-------------------------+
+     |
+     |--- PASS ----> Done
+     +--- REVISE --> retry (max 2)
+
+* Both agents load shared-rules.md at startup
+```
+
 ## 🧩 Components
 
 ### Skills
