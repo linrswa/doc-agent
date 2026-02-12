@@ -269,7 +269,7 @@ config_mismatch:
 
 ### Rules
 
-- **Max 2 revisions** per module. Revision 3 → auto-block, ask user.
+- **Max 2 revisions** (re-writes) per module. If the 3rd review still yields REVISE → auto-block and ask user.
 - **All documentation** must be in English.
 - **Response format**: After each operation, report ACTION, DETAILS, NEXT_STEP, and use `TaskList` to show progress.
 - **Project-specific considerations**: If `.doc-agents/project-special-consider.md` doesn't exist, create during first cycle with: tech stack, architecture patterns, key terminology, important directories, conventions.

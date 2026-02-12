@@ -169,8 +169,7 @@ SPOT_CHECK_PROTOCOL:
 
 3. Acceptance:
    - 5/5 valid: PASS traceability
-   - 4/5 valid: PASS with warning
-   - 3/5 or below: FAIL traceability → verdict REVISE
+   - 4/5 or below: FAIL traceability → verdict REVISE
 ```
 
 ## CRITICAL: Deep Code Verification Protocol
@@ -354,11 +353,11 @@ revision_info:
 
 ### Escalation Flags
 
-| Revision | Action |
-|----------|--------|
+| Review Pass | Action |
+|-------------|--------|
 | 1st | Normal review |
-| 2nd | Add WARNING: "Final revision before auto-block" |
-| 3rd | Recommend BLOCKED regardless of quality |
+| 2nd | Normal review + note: "This is a revision review" |
+| 3rd (final) | Normal review + note: "Final review — next REVISE triggers auto-block by doc-manage" |
 
 ## Example Review Report
 
