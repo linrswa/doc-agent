@@ -30,10 +30,7 @@ doc-agent bridges this gap. It generates documentation **grounded in actual sour
 |                        Claude Code Session                        |
 +-------------------------------------------------------------------+
 |                                                                   |
-|  User: "I just added a new auth module"                           |
-|         |                                                         |
-|         v                                                         |
-|  /doc-manage (coordinator)                                        |
+|  User: /doc-manage Document the new auth module                   |
 |         |                                                         |
 |         |  auto-generates/updates dispatch.json                   |
 |         |  via /gen-dispatch if needed                            |

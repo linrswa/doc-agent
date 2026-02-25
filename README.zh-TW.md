@@ -28,10 +28,7 @@ doc-agent 正是為了填補這個落差而生。它讓 AI 代理自動產生**�
 |                        Claude Code Session                        |
 +-------------------------------------------------------------------+
 |                                                                   |
-|  User: "I just added a new auth module"                           |
-|         |                                                         |
-|         v                                                         |
-|  /doc-manage (coordinator)                                        |
+|  User: /doc-manage Document the new auth module                   |
 |         |                                                         |
 |         |  auto-generates/updates dispatch.json                   |
 |         |  via /gen-dispatch if needed                            |
