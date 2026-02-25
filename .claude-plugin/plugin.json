@@ -1,6 +1,6 @@
 {
   "name": "doc-agent",
-  "version": "0.1.0",
+  "version": "0.4.0",
   "description": "Automatically manage documentation with multiple agents — bridging the gap between implementation and your mental model",
   "author": {
     "name": "linrswa"

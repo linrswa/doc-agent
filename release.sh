@@ -35,4 +35,13 @@ git tag "v$next"
 git push
 git push --tags
 
+NOTES_FILE="${2:-}"
+if [[ -n "$NOTES_FILE" && -f "$NOTES_FILE" ]]; then
+  gh release create "v$next" --title "v$next" --notes-file "$NOTES_FILE"
+else
+  gh release create "v$next" --title "v$next" --generate-notes
+fi
+
+claude plugin update doc-agent@local
+
 echo "Released $next"

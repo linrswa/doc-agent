@@ -1,0 +1,6 @@
+{
+  "description": "Files matching patterns below are excluded from all documentation references",
+  "patterns": [
+    "**/CLAUDE.md"
+  ]
+}
