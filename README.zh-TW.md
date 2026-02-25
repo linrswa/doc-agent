@@ -1,11 +1,11 @@
-# doc-agent
+# 📝 doc-agent
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Claude Code Plugin](https://img.shields.io/badge/Claude_Code-Plugin-blue.svg)](https://claude.com/claude-code)
 
 透過多代理自動管理文件——讓實作與你的心智模型保持連結。
 
-## 近期更新
+## 📢 近期更新
 
 **v0.4.0** — Dispatch 格式從 YAML 遷移至 JSON。新增 `validate-dispatch.py` hook，在每次 Write/Edit 時驗證 schema。
 
@@ -15,13 +15,13 @@
 
 > **關於 hooks：** Hook 機制（`check-block-list.py`、`validate-dispatch.py`）目前僅經過命令列測試驗證，**尚未在實際文件產生流程中實戰測試過**。如遇到問題請回報。
 
-## 為什麼需要 doc-agent？
+## 🤔 為什麼需要 doc-agent？
 
 在 AI 輔助開發的時代，程式碼的產出速度前所未有。但速度帶來了落差——實作不斷推進，你對它的理解卻未必跟上。
 
 doc-agent 正是為了填補這個落差而生。它讓 AI 代理自動產生**以實際原始碼為根據**的文件，每個描述都附上 `file:line` 引用。透過閱讀產生的文件，你可以快速確認實作是否與你腦中的架構一致。
 
-## 運作方式
+## 🔄 運作方式
 
 ```
 +-------------------------------------------------------------------+
@@ -58,7 +58,7 @@ doc-agent 正是為了填補這個落差而生。它讓 AI 代理自動產生**�
 +-------------------------------------------------------------------+
 ```
 
-## 安裝
+## 📦 安裝
 
 ### 開發模式（暫時性）
 
@@ -114,7 +114,7 @@ claude plugin install doc-agent@local --scope user
 
 **更新**：由於外掛是透過符號連結安裝的，執行 `cd ~/doc-agent && git pull && claude plugin update doc-agent@local`，然後重新啟動 Claude Code。
 
-## 使用方式
+## 🚀 使用方式
 
 先呼叫 `/doc-manage`，再於後續提示中描述要記錄的內容——這是最穩定的做法：
 
@@ -130,7 +130,7 @@ claude plugin install doc-agent@local --scope user
 
 `/doc-manage` 會自動檢查 dispatch 模板是否存在，並在需要時自動產生或更新——不需要手動執行 `/gen-dispatch`。
 
-## 設定
+## ⚙️ 設定
 
 ### 排除清單
 
@@ -153,7 +153,7 @@ claude plugin install doc-agent@local --scope user
 
 建立 `.doc-agents/project-special-consider.md` 來提供專案背景（技術堆疊、術語、慣例），代理在產生文件時會參考此檔案。
 
-## 外掛結構
+## 🏗️ 外掛結構
 
 ```
 doc-agent/
@@ -178,6 +178,6 @@ doc-agent/
     └── project-special-consider.md
 ```
 
-## 授權條款
+## 📜 授權條款
 
 MIT

@@ -1,4 +1,4 @@
-# doc-agent
+# 📝 doc-agent
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Claude Code Plugin](https://img.shields.io/badge/Claude_Code-Plugin-blue.svg)](https://claude.com/claude-code)
@@ -7,7 +7,7 @@
 
 Automatically manage documentation with multiple agents — bridging the gap between implementation and your mental model.
 
-## Recent Updates
+## 📢 Recent Updates
 
 **v0.4.0** — Migrated dispatch format from YAML to JSON. Added `validate-dispatch.py` hook for schema validation on every Write/Edit.
 
@@ -17,13 +17,13 @@ Automatically manage documentation with multiple agents — bridging the gap bet
 
 > **Note on hooks:** The hook mechanism (`check-block-list.py`, `validate-dispatch.py`) has only been verified via command-line testing — it has **not yet been battle-tested in real documentation runs**. Please report any issues you encounter.
 
-## Why doc-agent?
+## 🤔 Why doc-agent?
 
 In the era of AI-assisted development, code is written faster than ever. But speed creates a gap — the implementation moves forward while your understanding may not.
 
 doc-agent bridges this gap. It generates documentation **grounded in actual source code**, with every claim backed by `file:line` citations. By reading the generated docs, you can quickly verify whether the implementation matches your mental model.
 
-## How It Works
+## 🔄 How It Works
 
 ```
 +-------------------------------------------------------------------+
@@ -60,7 +60,7 @@ doc-agent bridges this gap. It generates documentation **grounded in actual sour
 +-------------------------------------------------------------------+
 ```
 
-## Installation
+## 📦 Installation
 
 ### Development Mode (Temporary)
 
@@ -116,7 +116,7 @@ claude plugin install doc-agent@local --scope user
 
 **Updating**: Since the plugin is symlinked, run `cd ~/doc-agent && git pull && claude plugin update doc-agent@local`, then restart Claude Code.
 
-## Usage
+## 🚀 Usage
 
 Invoke `/doc-manage` first, then describe what to document in the follow-up prompt — this is the most reliable approach:
 
@@ -132,7 +132,7 @@ You can also target a specific module:
 
 `/doc-manage` automatically checks whether dispatch templates exist and generates or updates them as needed — no manual `/gen-dispatch` required.
 
-## Configuration
+## ⚙️ Configuration
 
 ### Block List
 
@@ -155,7 +155,7 @@ A `PreToolUse` hook enforces this at the plugin level. `**/CLAUDE.md` is include
 
 Create `.doc-agents/project-special-consider.md` to provide project context (tech stack, terminology, conventions) that agents will reference during documentation.
 
-## Plugin Structure
+## 🏗️ Plugin Structure
 
 ```
 doc-agent/
@@ -180,6 +180,6 @@ doc-agent/
     └── project-special-consider.md
 ```
 
-## License
+## 📜 License
 
 MIT
