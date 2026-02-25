@@ -145,7 +145,7 @@ The following sections may be marked "Not Applicable" with valid justification:
 
 ## Config Mismatch Reporting
 
-While working with the codebase, if you discover that the actual implementation differs from what's described in `dispatch-templates.md` or `project-special-consider.md`, you MUST report it.
+While working with the codebase, if you discover that the actual implementation differs from what's described in `dispatch.json` or `project-special-consider.md`, you MUST report it.
 
 ### Mismatch Types
 

@@ -29,7 +29,7 @@ doc-agent 正是為了填補這個落差而生。它讓 AI 代理自動產生**�
      |
      |  掃描程式碼庫 & 產生模板
      v
-.doc-agents/dispatch-templates.md
+.doc-agents/dispatch.json
      |
      |  載入
      v
@@ -190,11 +190,11 @@ Claude 會主動使用 `/doc-manage` 來更新文件。
 /gen-dispatch
 ```
 
-這會建立 `.doc-agents/dispatch-templates.md`，其中包含每個模組的 YAML 模板。
+這會建立 `.doc-agents/dispatch.json`——JSON dispatch bundle（由 hook 驗證），包含每個模組的分派資料。
 
 ### 工作流程
 
-1. `/doc-manage` 從 `.doc-agents/dispatch-templates.md` 載入模板
+1. `/doc-manage` 從 `.doc-agents/dispatch.json` 載入分派資料
 2. 根據模組依賴關係建立執行計畫——獨立模組平行執行，有依賴關係的模組依序執行
 3. 對每個模組，將任務分派給 doc-writer 代理，指定具體範圍
 4. doc-writer 探索程式碼，寫附有 `file:line` 引用的文件
@@ -208,7 +208,7 @@ Claude 會主動使用 `/doc-manage` 來更新文件。
 ```
 .doc-agents/
 ├── block-list.json            # 排除文件參考的 glob 模式
-├── dispatch-templates.md      # 由 /gen-dispatch 產生
+├── dispatch.json              # 由 /gen-dispatch 產生（JSON bundle）
 └── project-special-consider.md # 專案特定考量
 ```
 
@@ -275,7 +275,7 @@ Claude 會主動使用 `/doc-manage` 來更新文件。
 }
 ```
 
-符合這些模式的檔案將從程式碼地圖、資料流程、引用及相關檔案索引中排除。預設已包含 `**/CLAUDE.md`。doc-writer 和 doc-reviewer 代理上的 `PreToolUse` hook 會在工具層級強制執行此規則。
+符合這些模式的檔案將從程式碼地圖、資料流程、引用及相關檔案索引中排除。預設已包含 `**/CLAUDE.md`。外掛層級的 `PreToolUse` hook 會在工具層級強制執行此規則。
 
 ### 專案特定考量
 
@@ -313,7 +313,9 @@ doc-agent/
 │   ├── doc-writer.md        # 寫代理
 │   └── doc-reviewer.md      # 審查代理
 ├── hooks/
-│   └── check-block-list.py  # 排除清單的 PreToolUse hook
+│   ├── hooks.json            # 外掛層級 hook 定義
+│   ├── check-block-list.py   # PreToolUse hook：排除清單檢查（Read）
+│   └── validate-dispatch.py  # PreToolUse hook：dispatch.json 驗證（Write/Edit）
 ├── skills/
 │   ├── doc-manage/
 │   │   └── SKILL.md         # 文件協調技能

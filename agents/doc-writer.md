@@ -4,12 +4,6 @@ description: "Use this agent when you need to create, update, or improve documen
 tools: Glob, Grep, Read, Edit, Write, NotebookEdit, WebFetch, WebSearch
 model: sonnet
 color: red
-hooks:
-  PreToolUse:
-    - matcher: "Read"
-      hooks:
-        - type: command
-          command: "python3 ${CLAUDE_PLUGIN_ROOT}/hooks/check-block-list.py"
 ---
 
 ## Pre-Work Step (MANDATORY)

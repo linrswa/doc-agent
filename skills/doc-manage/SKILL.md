@@ -61,7 +61,7 @@ Before starting, confirm scope with user based on conversation context. If uncle
 
 #### Execution Planning
 
-Build a dependency graph from each module's `consistency_requirements` in `dispatch-templates.md`:
+Build a dependency graph from each module's `consistency_requirements` in `dispatch.json`:
 
 1. **Parse**: If module A's `consistency_requirements` references module B → B must complete before A (B → A)
 2. **Group**:
@@ -122,13 +122,13 @@ Execution plan:
 
 ### UPDATE()
 
-Check if `.doc-agents/dispatch-templates.md` and `.doc-agents/project-special-consider.md` are in sync with the current codebase.
+Check if `.doc-agents/dispatch.json` and `.doc-agents/project-special-consider.md` are in sync with the current codebase.
 
 **Prerequisites**: `.doc-agents/` directory should exist. If config files are missing, suggest creating them.
 
 **Steps**:
 1. Analyze current codebase structure (entry points, modules, directories, tech stack)
-2. Compare with existing `dispatch-templates.md`:
+2. Compare with existing `dispatch.json`:
    - New modules not in templates?
    - Removed modules still in templates?
    - Changed paths in `repo_hints`?
@@ -136,7 +136,7 @@ Check if `.doc-agents/dispatch-templates.md` and `.doc-agents/project-special-co
    - New frameworks/libraries added?
    - Architecture patterns changed?
 4. Report findings to user as a checklist
-5. If user confirms → `dispatch-templates.md`: re-run `/gen-dispatch`; `project-special-consider.md`: edit directly
+5. If user confirms → `dispatch.json`: re-run `/gen-dispatch`; `project-special-consider.md`: edit directly
 
 **Output**: Updated config files (or no changes needed).
 
@@ -144,13 +144,13 @@ Check if `.doc-agents/dispatch-templates.md` and `.doc-agents/project-special-co
 
 Dispatch documentation task to doc-writer agent.
 
-**Prerequisites**: `.doc-agents/dispatch-templates.md` **must exist**. If missing, call `/gen-dispatch`. Halt if fails.
+**Prerequisites**: `.doc-agents/dispatch.json` **must exist**. If missing, call `/gen-dispatch`. Halt if fails.
 
 **Steps**:
 1. Load dispatch template for target module + `project-special-consider.md` if exists
 2. Load `.doc-agents/block-list.json` (if exists) and include block list patterns in the dispatch context
 3. TaskUpdate: status → `in_progress`, phase → `"writing"`
-4. Dispatch to doc-writer via Task tool (`subagent_type: "doc-agent:doc-writer"`) with dispatch YAML + `extra_context` if provided
+4. Dispatch to doc-writer via Task tool (`subagent_type: "doc-agent:doc-writer"`) with dispatch JSON fields + `extra_context` if provided
 5. Check response for config mismatch reports (see Reference)
 
 **Output**: Written/updated documentation file.
@@ -176,42 +176,24 @@ Pass document to doc-reviewer agent for review.
 
 ### Dispatch Format (to doc-writer)
 
-```yaml
-dispatch_id: DOC-{module}-{yyyymmdd}-{nn}
-module: {module_name}
-target_doc: {target_path}
+The dispatch is sourced from `.doc-agents/dispatch.json`. Each entry in the `dispatches` array contains the fields below. When dispatching to doc-writer via the Task tool, format these fields into the prompt:
 
-objective: >
-  Single sentence describing the deliverable goal
+| Field | Description |
+|-------|-------------|
+| `dispatch_id` | Unique ID (pattern: `DOC-[a-z0-9_]+-YYYYMMDD-NN`) |
+| `module` | Module name |
+| `target_doc` | Output file path (pattern: `docs/NN-name.md`) |
+| `objective` | Single sentence goal (min 10 chars) |
+| `scope_in` | What to include (1-6 items) |
+| `scope_out` | What NOT to include |
+| `required_sections` | Sections the doc must contain |
+| `repo_hints` | Directories/files to explore first |
+| `canonical_sources` | Authoritative source documents |
+| `consistency_requirements` | Cross-document consistency items |
+| `verification_requirements` | Source verification rules |
+| `acceptance_criteria` | Criteria for completion |
 
-scope_in:
-  - Explicitly included aspects (max 6 items)
-
-scope_out:
-  - Explicitly excluded aspects
-
-required_sections:
-  - Overview
-  - Data Flow
-  - Code Map
-  - Troubleshooting
-  - Extension Guide
-
-repo_hints:
-  - Directories/files/keywords to explore first
-
-canonical_sources:
-  - {path to authoritative source documents}
-
-consistency_requirements:
-  - Items that must be consistent with other documents
-
-block_list:
-  - Glob patterns from .doc-agents/block-list.json (if exists)
-
-acceptance_criteria:
-  - Acceptance criteria list
-```
+Additionally include `block_list` patterns from `.doc-agents/block-list.json` (if exists) in the dispatch context.
 
 ### Review Request Format (to doc-reviewer)
 
