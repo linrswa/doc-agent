@@ -1,4 +1,4 @@
-# 📝 doc-agent
+# doc-agent
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Claude Code Plugin](https://img.shields.io/badge/Claude_Code-Plugin-blue.svg)](https://claude.com/claude-code)
@@ -7,90 +7,76 @@
 
 Automatically manage documentation with multiple agents — bridging the gap between implementation and your mental model.
 
-## 🤔 Why doc-agent?
+## Recent Updates
 
-In the era of AI-assisted development, code is being written faster than ever. But speed creates a gap — the implementation moves forward while your understanding of it may not. Without a reliable way to verify what was actually built, it's easy for code to silently drift from your intended architecture.
+**v0.4.0** — Migrated dispatch format from YAML to JSON. Added `validate-dispatch.py` hook for schema validation on every Write/Edit.
 
-doc-agent bridges this gap. It lets AI agents automatically generate documentation **grounded in actual source code**, with every claim backed by `file:line` citations. This isn't documentation for documentation's sake — it's a verification tool. By reading the generated docs, you can quickly check whether the implementation aligns with your mental model, catch architectural drift early, and maintain confidence in a rapidly evolving codebase.
+**v0.3.0 ~ v0.3.2** — Migrated block list to JSON with `check-block-list.py` PreToolUse hook enforcement. Unified revision limits and citation validation standards.
 
-## ✨ Features
+**v0.2.0** — Extracted shared rules (`shared-rules.md`) and added block list support.
 
-- **Coordinated Workflow**: `/doc-manage` skill orchestrates doc-writer and doc-reviewer agents with built-in task tracking
-- **Context-Aware**: The skill has full conversation context to understand what you just built
-- **Evidence-Based Documentation**: All claims require `file:line` citations
-- **Dynamic Thresholds**: Citation requirements scale with module size
-- **Quality Gating**: Structured review with PASS/REVISE/BLOCKED verdicts
-- **Project Adaptability**: Project-specific considerations via configuration
-- **Block List**: Exclude files from documentation references via glob patterns
-- **Shared Rules**: Centralized rules for agents to ensure consistency
+> **Note on hooks:** The hook mechanism (`check-block-list.py`, `validate-dispatch.py`) has only been verified via command-line testing — it has **not yet been battle-tested in real documentation runs**. Please report any issues you encounter.
 
-## 🔧 How It Works
+## Why doc-agent?
+
+In the era of AI-assisted development, code is written faster than ever. But speed creates a gap — the implementation moves forward while your understanding may not.
+
+doc-agent bridges this gap. It generates documentation **grounded in actual source code**, with every claim backed by `file:line` citations. By reading the generated docs, you can quickly verify whether the implementation matches your mental model.
+
+## How It Works
 
 ```
-/gen-dispatch
-     |
-     |  scan codebase & generate templates
-     v
-.doc-agents/dispatch.json
-     |
-     |  loaded by
-     v
-/doc-manage (coordinator)
-     |
-     |--- dispatch -------> doc-writer
-     |                          |
-     |                   doc with file:line
-     |                      citations
-     |                          |
-     |<-------------------------+
-     |
-     |--- review --------> doc-reviewer
-     |                          |
-     |                       verdict
-     |                          |
-     |<-------------------------+
-     |
-     |--- PASS ----> Done
-     +--- REVISE --> retry (max 2)
-
-* Both agents load shared-rules.md at startup
++-------------------------------------------------------------------+
+|                        Claude Code Session                        |
++-------------------------------------------------------------------+
+|                                                                   |
+|  User: "I just added a new auth module"                           |
+|         |                                                         |
+|         v                                                         |
+|  /doc-manage (coordinator)                                        |
+|         |                                                         |
+|         |  auto-generates/updates dispatch.json                   |
+|         |  via /gen-dispatch if needed                            |
+|         |                                                         |
+|         +--[ dispatch ]----> doc-writer -----+                    |
+|         |                    - explores code |                    |
+|         |                    - writes docs   |                    |
+|         |                    - adds file:line|                    |
+|         |                      citations     |                    |
+|         |<---[ draft ]-----------------------+                    |
+|         |                                                         |
+|         +--[ review ]-----> doc-reviewer ----+                    |
+|         |                   - checks quality |                    |
+|         |                   - verifies refs  |                    |
+|         |<---[ verdict ]---------------------+                    |
+|         |                                                         |
+|         +---> PASS -----> Done                                    |
+|         +---> REVISE ---> retry (max 2)                           |
+|         +---> BLOCKED --> escalate to user                        |
+|                                                                   |
+|  * Both agents load shared-rules.md at startup                    |
+|  * Block-list hook prevents reading excluded files                |
+|  * Dispatch hook validates dispatch.json on write                 |
++-------------------------------------------------------------------+
 ```
 
-## 🧩 Components
+## Installation
 
-### Skills
-
-| Skill | Purpose |
-|-------|---------|
-| `/doc-manage` | Coordinates workflow, dispatches tasks, tracks progress |
-| `/gen-dispatch` | Generates dispatch templates for documentation tasks |
-
-### Agents
-
-| Agent | Role |
-|-------|------|
-| `doc-agent:doc-writer` | Explores codebase, writes documentation with citations |
-| `doc-agent:doc-reviewer` | Reviews documentation quality, verifies citations |
-
-## 📦 Installation
-
-### Option 1: Development Mode (Temporary)
+### Development Mode (Temporary)
 
 ```bash
 claude --plugin-dir ./doc-agent
 ```
 
-### Option 2: Global Installation (Permanent)
+### Global Installation
 
-#### Step 1: Clone the repository
+**1. Clone the repository**
 
 ```bash
 git clone https://github.com/linrswa/doc-agent.git ~/doc-agent
 ```
 
-#### Step 2: Create a local marketplace (first time only)
-
-If you don't have a local marketplace yet:
+**2. Create a local marketplace** (first time only)
 
 ```bash
 mkdir -p ~/.claude/marketplaces/local/.claude-plugin
@@ -103,13 +89,11 @@ Create `~/.claude/marketplaces/local/.claude-plugin/marketplace.json`:
 {
   "name": "local",
   "description": "Local plugin marketplace for personal plugins",
-  "owner": {
-    "name": "your-name"
-  },
+  "owner": { "name": "your-name" },
   "plugins": [
     {
       "name": "doc-agent",
-      "description": "Multi-agent documentation system with coordinated writing, reviewing, and management workflows",
+      "description": "Multi-agent documentation system",
       "source": "./plugins/doc-agent"
     }
   ]
@@ -118,148 +102,37 @@ Create `~/.claude/marketplaces/local/.claude-plugin/marketplace.json`:
 
 > If you already have a local marketplace, just add the `doc-agent` entry to the existing `plugins` array.
 
-#### Step 3: Link plugin to marketplace
+**3. Link and install**
 
 ```bash
 ln -s ~/doc-agent ~/.claude/marketplaces/local/plugins/doc-agent
-```
 
-#### Step 4: Add marketplace and install
-
-```bash
-# Add marketplace (first time only)
+# First time only
 claude plugin marketplace add ~/.claude/marketplaces/local
 
-# Install plugin
+# Install
 claude plugin install doc-agent@local --scope user
 ```
 
-#### Verify installation
+**Updating**: Since the plugin is symlinked, run `cd ~/doc-agent && git pull && claude plugin update doc-agent@local`, then restart Claude Code.
 
-```bash
-claude plugin list
-```
+## Usage
 
-Expected output:
-```
-  ❯ doc-agent@local
-    Version: 0.1.0
-    Scope: user
-    Status: ✔ enabled
-```
-
-## 🔄 Updating the Plugin
-
-Since the plugin is symlinked, just pull the latest changes and update:
-
-```bash
-cd ~/doc-agent
-git pull
-claude plugin update doc-agent@local
-```
-
-Then restart your Claude Code session to apply changes.
-
-## 🚀 Usage
-
-### Quick Start
-
-Just tell Claude what you built:
+Invoke `/doc-manage` first, then describe what to document in the follow-up prompt — this is the most reliable approach:
 
 ```
-I just added a new /api/users/{id}/profile endpoint
+/doc-manage Document the new /api/users/{id}/profile endpoint
 ```
 
-Claude will proactively use `/doc-manage` to update documentation.
-
-### Manual Invocation
-
-```
-/doc-manage
-```
-
-Or with a specific target:
+You can also target a specific module:
 
 ```
 /doc-manage authentication
 ```
 
-### Generate Dispatch Templates
+`/doc-manage` automatically checks whether dispatch templates exist and generates or updates them as needed — no manual `/gen-dispatch` required.
 
-For new projects, first generate dispatch templates:
-
-```
-/gen-dispatch
-```
-
-This creates `.doc-agents/dispatch.json` — a JSON dispatch bundle (validated by hook) for each module.
-
-### Workflow
-
-1. `/doc-manage` loads dispatch entries from `.doc-agents/dispatch.json`
-2. Builds an execution plan based on module dependencies — independent modules run in parallel, dependent modules run sequentially
-3. For each module, dispatches task to doc-writer agent with specific scope
-4. doc-writer explores code, writes documentation with `file:line` citations
-5. `/doc-manage` sends to doc-reviewer agent for quality verification
-6. Iterate until PASS or max revisions (2) reached; escalate if blocked
-
-## 📁 Working Directory
-
-All working files are stored in `.doc-agents/` at the project root:
-
-```
-.doc-agents/
-├── block-list.json            # Glob patterns to exclude from docs
-├── dispatch.json              # Generated by /gen-dispatch (JSON bundle)
-└── project-special-consider.md # Project-specific considerations
-```
-
-Progress tracking uses Claude's built-in Task tools (`TaskCreate`, `TaskUpdate`, `TaskList`) instead of a file.
-
-## 📄 Documentation Structure
-
-Generated documentation follows a standardized structure:
-
-| Section | Required | Description |
-|---------|----------|-------------|
-| TL;DR | Yes | 3-5 key points summary |
-| Overview | Yes | Module purpose and boundaries |
-| Data Flow | Conditional | Mermaid diagram (N/A for libraries) |
-| Code Map | Yes | Table of key functions with citations |
-| Troubleshooting | Conditional | Problem scenarios (N/A for new modules) |
-| Extension Guide | Yes | How to extend the module |
-
-### Optional Sections
-
-Data Flow and Troubleshooting can be marked "Not Applicable" with valid justification:
-
-```markdown
-## Data Flow
-
-**Not Applicable**: This module is a pure utility library with stateless functions.
-```
-
-## 🔗 Citation Requirements
-
-Citations scale dynamically based on module size:
-
-| Module Size | Files | Min Citations | Min Code Map |
-|-------------|-------|---------------|--------------|
-| Small | 1-5 | 8 | 4 |
-| Medium | 6-15 | 12-20 | 6-10 |
-| Large | 16+ | 20-30 | 10-15 |
-
-### Supported Citation Formats
-
-| Format | Weight | Example |
-|--------|--------|---------|
-| Code reference | 1.0 | `src/auth/login.ts:42` |
-| Proto definition | 1.0 | `api/user.proto:UserProfile` |
-| Config path | 0.5 | `config/database.yml > connection.pool_size` |
-| Section anchor | 0.5 | `docs/api.md#authentication` |
-| External spec | 0.5 | `[RFC-7231] url#section` |
-
-## ⚙️ Configuration
+## Configuration
 
 ### Block List
 
@@ -271,62 +144,42 @@ Create `.doc-agents/block-list.json` to exclude files from documentation referen
   "patterns": [
     "**/CLAUDE.md",
     "node_modules/**",
-    "dist/**",
-    "**/*.test.ts"
+    "dist/**"
   ]
 }
 ```
 
-Files matching these patterns will be excluded from Code Map, Data Flow, citations, and Related Files Index. `**/CLAUDE.md` is included by default. A `PreToolUse` hook on the `Read` tool enforces this at the plugin level.
+A `PreToolUse` hook enforces this at the plugin level. `**/CLAUDE.md` is included by default.
 
 ### Project-Specific Considerations
 
-Create `.doc-agents/project-special-consider.md` to customize for your project:
+Create `.doc-agents/project-special-consider.md` to provide project context (tech stack, terminology, conventions) that agents will reference during documentation.
 
-```markdown
-# Project-Specific Documentation Considerations
-
-## Tech Stack
-- Primary languages: Python, TypeScript
-- Key frameworks: FastAPI, React
-
-## Terminology
-| Term | Meaning |
-|------|---------|
-| tenant | Organization or workspace in multi-tenant context |
-
-## Important Paths
-- Entry points: src/main.py, src/index.ts
-- Configuration: config/
-
-## Documentation Conventions
-- Include error handling notes for all API endpoints
-- Document environment variables in Overview section
-```
-
-## 🏗️ Plugin Structure
+## Plugin Structure
 
 ```
 doc-agent/
 ├── .claude-plugin/
-│   └── plugin.json          # Plugin manifest
+│   └── plugin.json            # Plugin manifest
 ├── agents/
-│   ├── shared-rules.md      # Shared rules (loaded by agents at startup)
-│   ├── doc-writer.md        # Writer agent
-│   └── doc-reviewer.md      # Reviewer agent
+│   ├── shared-rules.md        # Shared rules (loaded at startup)
+│   ├── doc-writer.md          # Writer agent definition
+│   └── doc-reviewer.md        # Reviewer agent definition
 ├── hooks/
-│   ├── hooks.json            # Plugin-level hook definitions
-│   ├── check-block-list.py   # PreToolUse hook: block list enforcement (Read)
-│   └── validate-dispatch.py  # PreToolUse hook: dispatch.json validation (Write/Edit)
+│   ├── hooks.json             # Hook definitions
+│   ├── check-block-list.py    # Block list enforcement (Read)
+│   └── validate-dispatch.py   # Dispatch schema validation (Write/Edit)
 ├── skills/
 │   ├── doc-manage/
-│   │   └── SKILL.md         # Documentation coordinator skill
+│   │   └── SKILL.md           # Documentation coordinator
 │   └── gen-dispatch/
-│       └── SKILL.md         # Dispatch template generator
-├── README.md
-└── LICENSE
+│       └── SKILL.md           # Dispatch template generator
+└── .doc-agents/               # Per-project working directory
+    ├── block-list.json        # Glob patterns to exclude
+    ├── dispatch.json          # Module dispatch data
+    └── project-special-consider.md
 ```
 
-## 📜 License
+## License
 
 MIT
