@@ -34,7 +34,7 @@ Coordinate documentation workflow by dispatching tasks to doc-writer and doc-rev
 | 3 | "update", "更新", "sync", "同步" | **UPDATE-ONLY** |
 | 4 | Default (no special keywords) | **DEFAULT** |
 
-Before starting, confirm scope with user based on conversation context. If unclear, ask which pipeline they want.
+When the pipeline is clear from the command, proceed immediately without confirmation. Only ask when truly ambiguous (e.g., user provides conflicting keywords).
 
 ---
 
@@ -135,10 +135,11 @@ Check if `.doc-agents/dispatch.json` and `.doc-agents/project-special-consider.m
 3. Compare with existing `project-special-consider.md`:
    - New frameworks/libraries added?
    - Architecture patterns changed?
-4. Report findings to user as a checklist
-5. If user confirms → `dispatch.json`: re-run `/gen-dispatch`; `project-special-consider.md`: edit directly
+4. **Auto-proceed**: Apply necessary updates automatically (`dispatch.json`: re-run `/gen-dispatch`; `project-special-consider.md`: edit directly)
+5. Show a brief summary of what was updated, then continue to next pipeline step
+6. **Only stop and ask user** if a CRITICAL mismatch is found or updates would be destructive
 
-**Output**: Updated config files (or no changes needed).
+**Output**: Updated config files (or no changes needed). Pipeline continues automatically.
 
 ### WRITE(module, [extra_context])
 
