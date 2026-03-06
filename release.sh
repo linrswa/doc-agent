@@ -1,7 +1,9 @@
 #!/bin/bash
 set -euo pipefail
 
-PLUGIN_JSON="$(dirname "$0")/.claude-plugin/plugin.json"
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+PLUGIN_JSON="$SCRIPT_DIR/plugins/doc-agent/.claude-plugin/plugin.json"
+MARKETPLACE_JSON="$SCRIPT_DIR/.claude-plugin/marketplace.json"
 
 if [[ ! -f "$PLUGIN_JSON" ]]; then
   echo "Error: $PLUGIN_JSON not found"
@@ -24,12 +26,13 @@ esac
 
 next="$major.$minor.$patch"
 
-sed -i "s/\"version\": *\"$current\"/\"version\": \"$next\"/" "$PLUGIN_JSON"
+sed -i '' "s/\"version\": *\"$current\"/\"version\": \"$next\"/" "$PLUGIN_JSON"
+sed -i '' "s/\"version\": *\"$current\"/\"version\": \"$next\"/" "$MARKETPLACE_JSON"
 
 echo "$current -> $next"
 
-cd "$(dirname "$0")"
-git add .claude-plugin/plugin.json
+cd "$SCRIPT_DIR"
+git add plugins/doc-agent/.claude-plugin/plugin.json .claude-plugin/marketplace.json
 git commit -m "chore: bump version to $next"
 git tag "v$next"
 git push
@@ -41,7 +44,5 @@ if [[ -n "$NOTES_FILE" && -f "$NOTES_FILE" ]]; then
 else
   gh release create "v$next" --title "v$next" --generate-notes
 fi
-
-claude plugin update doc-agent@local
 
 echo "Released $next"
