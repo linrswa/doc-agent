@@ -12,7 +12,7 @@
       "name": "doc-agent",
       "source": "./plugins/doc-agent",
       "description": "Automatically manage documentation with multiple agents — bridging the gap between implementation and your mental model",
-      "version": "0.4.1",
+      "version": "0.4.2",
       "author": { "name": "linrswa" },
       "license": "MIT",
       "keywords": ["documentation", "technical-writing", "code-documentation", "multi-agent"],
