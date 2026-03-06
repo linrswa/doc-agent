@@ -59,59 +59,13 @@ doc-agent bridges this gap. It generates documentation **grounded in actual sour
 
 ## 📦 Installation
 
-### Development Mode (Temporary)
-
 ```bash
-claude --plugin-dir ./doc-agent
+# Add the marketplace
+claude plugin marketplace add linrswa/doc-agent
+
+# Install the plugin
+claude plugin install doc-agent@doc-agent
 ```
-
-### Global Installation
-
-**1. Clone the repository**
-
-```bash
-git clone https://github.com/linrswa/doc-agent.git ~/doc-agent
-```
-
-**2. Create a local marketplace** (first time only)
-
-```bash
-mkdir -p ~/.claude/marketplaces/local/.claude-plugin
-mkdir -p ~/.claude/marketplaces/local/plugins
-```
-
-Create `~/.claude/marketplaces/local/.claude-plugin/marketplace.json`:
-
-```json
-{
-  "name": "local",
-  "description": "Local plugin marketplace for personal plugins",
-  "owner": { "name": "your-name" },
-  "plugins": [
-    {
-      "name": "doc-agent",
-      "description": "Multi-agent documentation system",
-      "source": "./plugins/doc-agent"
-    }
-  ]
-}
-```
-
-> If you already have a local marketplace, just add the `doc-agent` entry to the existing `plugins` array.
-
-**3. Link and install**
-
-```bash
-ln -s ~/doc-agent ~/.claude/marketplaces/local/plugins/doc-agent
-
-# First time only
-claude plugin marketplace add ~/.claude/marketplaces/local
-
-# Install
-claude plugin install doc-agent@local --scope user
-```
-
-**Updating**: Since the plugin is symlinked, run `cd ~/doc-agent && git pull && claude plugin update doc-agent@local`, then restart Claude Code.
 
 ## 🚀 Usage
 
@@ -157,24 +111,32 @@ Create `.doc-agents/project-special-consider.md` to provide project context (tec
 ```
 doc-agent/
 ├── .claude-plugin/
-│   └── plugin.json            # Plugin manifest
-├── agents/
-│   ├── shared-rules.md        # Shared rules (loaded at startup)
-│   ├── doc-writer.md          # Writer agent definition
-│   └── doc-reviewer.md        # Reviewer agent definition
-├── hooks/
-│   ├── hooks.json             # Hook definitions
-│   ├── check-block-list.py    # Block list enforcement (Read)
-│   └── validate-dispatch.py   # Dispatch schema validation (Write/Edit)
-├── skills/
-│   ├── doc-manage/
-│   │   └── SKILL.md           # Documentation coordinator
-│   └── gen-dispatch/
-│       └── SKILL.md           # Dispatch template generator
-└── .doc-agents/               # Per-project working directory
-    ├── block-list.json        # Glob patterns to exclude
-    ├── dispatch.json          # Module dispatch data
-    └── project-special-consider.md
+│   └── marketplace.json       # Marketplace definition
+├── plugins/
+│   └── doc-agent/
+│       ├── .claude-plugin/
+│       │   └── plugin.json    # Plugin manifest
+│       ├── agents/
+│       │   ├── shared-rules.md        # Shared rules (loaded at startup)
+│       │   ├── doc-writer.md          # Writer agent definition
+│       │   └── doc-reviewer.md        # Reviewer agent definition
+│       ├── hooks/
+│       │   ├── hooks.json             # Hook definitions
+│       │   ├── check-block-list.py    # Block list enforcement (Read)
+│       │   └── validate-dispatch.py   # Dispatch schema validation (Write/Edit)
+│       ├── skills/
+│       │   ├── doc-manage/
+│       │   │   └── SKILL.md           # Documentation coordinator
+│       │   └── gen-dispatch/
+│       │       └── SKILL.md           # Dispatch template generator
+│       ├── .doc-agents/               # Per-project working directory
+│       │   ├── block-list.json        # Glob patterns to exclude
+│       │   ├── dispatch.json          # Module dispatch data
+│       │   └── project-special-consider.md
+│       └── CLAUDE.md
+├── LICENSE
+├── README.md
+└── README.zh-TW.md
 ```
 
 ## 📜 License
