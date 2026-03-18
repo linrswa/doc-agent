@@ -11,7 +11,7 @@
 
 **v0.4.3** — 將 SKILL.md 中的參考細節抽取至獨立的 `references/` 文件。強化 `release.sh` 支援 release notes 與 dry-run。
 
-**v0.4.2** — 移除確認閘門，讓 `/doc-manage` 自動完成整個 pipeline 不中斷。
+**v0.4.2** — 移除中途確認步驟，讓 `/doc-manage` 自動跑完整個 pipeline 不中斷。
 
 **v0.4.1** — 將外掛檔案移至 `plugins/doc-agent/` 子目錄，確保 marketplace 安裝乾淨。
 
