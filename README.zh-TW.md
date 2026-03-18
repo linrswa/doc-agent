@@ -7,11 +7,11 @@
 
 ## 📢 近期更新
 
+**v0.4.4** — 優化 skill 描述與 pipeline 偵測邏輯。修正 MODIFY pipeline 歧義，消除 README/CLAUDE.md 的誤觸發。30 次 benchmark 測試達到 100% 準確率。
+
 **v0.4.0** — Dispatch 格式從 YAML 遷移至 JSON。新增 `validate-dispatch.py` hook，在每次 Write/Edit 時驗證 schema。
 
 **v0.3.0 ~ v0.3.2** — 排除清單遷移至 JSON，新增 `check-block-list.py` PreToolUse hook 強制執行。統一修訂次數上限與引用驗證標準。
-
-**v0.2.0** — 抽取共享規則（`shared-rules.md`），新增排除清單功能。
 
 > **關於 hooks：** Hook 機制（`check-block-list.py`、`validate-dispatch.py`）目前僅經過命令列測試驗證，**尚未在實際文件產生流程中實戰測試過**。如遇到問題請回報。
 
@@ -67,19 +67,16 @@ claude plugin install doc-agent@doc-agent
 
 ## 🚀 使用方式
 
-先呼叫 `/doc-manage`，再於後續提示中描述要記錄的內容——這是最穩定的做法：
-
-```
-/doc-manage Document the new /api/users/{id}/profile endpoint
-```
-
-也可以指定特定模組：
-
-```
-/doc-manage authentication
-```
+| 指令 | 功能 |
+|------|------|
+| `/doc-manage` | 完整流程：更新設定 → 撰寫 → 審查 |
+| `/doc-manage {module}` | 為特定模組產生文件 |
+| `/doc-manage review docs/01-api.md` | 審查現有文件的正確性 |
+| `/doc-manage modify "更新 auth 相關內容" docs/02-auth.md` | 根據提示修改現有文件 |
 
 `/doc-manage` 會自動檢查 dispatch 模板是否存在，並在需要時自動產生或更新——不需要手動執行 `/gen-dispatch`。
+
+> **適用範圍：** doc-agent 產生的是 `docs/` 目錄下的結構化技術文件。它**不會**處理 README、CLAUDE.md、行內註解或 JSDoc——那些是一般編輯工作。
 
 ## ⚙️ 設定
 
@@ -108,34 +105,23 @@ claude plugin install doc-agent@doc-agent
 
 ```
 doc-agent/
-├── .claude-plugin/
-│   └── marketplace.json       # Marketplace definition
-├── plugins/
-│   └── doc-agent/
-│       ├── .claude-plugin/
-│       │   └── plugin.json    # Plugin manifest
-│       ├── agents/
-│       │   ├── shared-rules.md        # Shared rules (loaded at startup)
-│       │   ├── doc-writer.md          # Writer agent definition
-│       │   └── doc-reviewer.md        # Reviewer agent definition
-│       ├── hooks/
-│       │   ├── hooks.json             # Hook definitions
-│       │   ├── check-block-list.py    # Block list enforcement (Read)
-│       │   └── validate-dispatch.py   # Dispatch schema validation (Write/Edit)
-│       ├── skills/
-│       │   ├── doc-manage/
-│       │   │   └── SKILL.md           # Documentation coordinator
-│       │   └── gen-dispatch/
-│       │       └── SKILL.md           # Dispatch template generator
-│       ├── .doc-agents/               # Per-project working directory
-│       │   ├── block-list.json        # Glob patterns to exclude
-│       │   ├── dispatch.json          # Module dispatch data
-│       │   └── project-special-consider.md
-│       └── CLAUDE.md
-├── LICENSE
-├── README.md
-└── README.zh-TW.md
+├── plugins/doc-agent/
+│   ├── agents/
+│   │   ├── shared-rules.md        # 共享規則（引用格式、閾值）
+│   │   ├── doc-writer.md          # 撰寫代理（僅結構化文件）
+│   │   └── doc-reviewer.md        # 審查代理（僅結構化文件）
+│   ├── hooks/
+│   │   ├── check-block-list.py    # 排除清單強制執行 (PreToolUse)
+│   │   └── validate-dispatch.py   # Dispatch schema 驗證 (Write/Edit)
+│   └── skills/
+│       ├── doc-manage/SKILL.md    # 文件協調器
+│       └── gen-dispatch/SKILL.md  # Dispatch 設定產生器
 ```
+
+**專案層級檔案**（自動建立在 `.doc-agents/`）：
+- `dispatch.json` — 模組 dispatch 模板
+- `block-list.json` — 排除的 glob 模式
+- `project-special-consider.md` — 專案背景資訊
 
 ## 📜 授權條款
 

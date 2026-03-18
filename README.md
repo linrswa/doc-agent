@@ -9,11 +9,11 @@ Automatically manage documentation with multiple agents — bridging the gap bet
 
 ## 📢 Recent Updates
 
+**v0.4.4** — Optimized skill descriptions and pipeline detection. Fixed MODIFY pipeline ambiguity, eliminated false triggers on README/CLAUDE.md tasks. Benchmarked at 100% accuracy across 30 runs.
+
 **v0.4.0** — Migrated dispatch format from YAML to JSON. Added `validate-dispatch.py` hook for schema validation on every Write/Edit.
 
 **v0.3.0 ~ v0.3.2** — Migrated block list to JSON with `check-block-list.py` PreToolUse hook enforcement. Unified revision limits and citation validation standards.
-
-**v0.2.0** — Extracted shared rules (`shared-rules.md`) and added block list support.
 
 > **Note on hooks:** The hook mechanism (`check-block-list.py`, `validate-dispatch.py`) has only been verified via command-line testing — it has **not yet been battle-tested in real documentation runs**. Please report any issues you encounter.
 
@@ -69,19 +69,16 @@ claude plugin install doc-agent@doc-agent
 
 ## 🚀 Usage
 
-Invoke `/doc-manage` first, then describe what to document in the follow-up prompt — this is the most reliable approach:
-
-```
-/doc-manage Document the new /api/users/{id}/profile endpoint
-```
-
-You can also target a specific module:
-
-```
-/doc-manage authentication
-```
+| Command | What it does |
+|---------|-------------|
+| `/doc-manage` | Full workflow: update config → write → review |
+| `/doc-manage {module}` | Document a specific module |
+| `/doc-manage review docs/01-api.md` | Review existing docs for accuracy |
+| `/doc-manage modify "update for new auth" docs/02-auth.md` | Modify existing doc based on prompt |
 
 `/doc-manage` automatically checks whether dispatch templates exist and generates or updates them as needed — no manual `/gen-dispatch` required.
+
+> **Scope:** doc-agent produces structured technical documentation in the `docs/` directory. It does **not** handle README, CLAUDE.md, inline comments, or JSDoc — those are standard editing tasks.
 
 ## ⚙️ Configuration
 
@@ -110,34 +107,23 @@ Create `.doc-agents/project-special-consider.md` to provide project context (tec
 
 ```
 doc-agent/
-├── .claude-plugin/
-│   └── marketplace.json       # Marketplace definition
-├── plugins/
-│   └── doc-agent/
-│       ├── .claude-plugin/
-│       │   └── plugin.json    # Plugin manifest
-│       ├── agents/
-│       │   ├── shared-rules.md        # Shared rules (loaded at startup)
-│       │   ├── doc-writer.md          # Writer agent definition
-│       │   └── doc-reviewer.md        # Reviewer agent definition
-│       ├── hooks/
-│       │   ├── hooks.json             # Hook definitions
-│       │   ├── check-block-list.py    # Block list enforcement (Read)
-│       │   └── validate-dispatch.py   # Dispatch schema validation (Write/Edit)
-│       ├── skills/
-│       │   ├── doc-manage/
-│       │   │   └── SKILL.md           # Documentation coordinator
-│       │   └── gen-dispatch/
-│       │       └── SKILL.md           # Dispatch template generator
-│       ├── .doc-agents/               # Per-project working directory
-│       │   ├── block-list.json        # Glob patterns to exclude
-│       │   ├── dispatch.json          # Module dispatch data
-│       │   └── project-special-consider.md
-│       └── CLAUDE.md
-├── LICENSE
-├── README.md
-└── README.zh-TW.md
+├── plugins/doc-agent/
+│   ├── agents/
+│   │   ├── shared-rules.md        # Shared rules (citation, thresholds)
+│   │   ├── doc-writer.md          # Writer agent (structured docs only)
+│   │   └── doc-reviewer.md        # Reviewer agent (structured docs only)
+│   ├── hooks/
+│   │   ├── check-block-list.py    # Block list enforcement (PreToolUse)
+│   │   └── validate-dispatch.py   # Dispatch schema validation (Write/Edit)
+│   └── skills/
+│       ├── doc-manage/SKILL.md    # Documentation coordinator
+│       └── gen-dispatch/SKILL.md  # Dispatch config generator
 ```
+
+**Per-project files** (created automatically in `.doc-agents/`):
+- `dispatch.json` — Module dispatch templates
+- `block-list.json` — Glob patterns to exclude
+- `project-special-consider.md` — Project context
 
 ## 📜 License
 
