@@ -11,6 +11,12 @@ Automatically manage documentation with multiple agents — bridging the gap bet
 
 **v0.4.4** — Optimized skill descriptions and pipeline detection. Fixed MODIFY pipeline ambiguity, eliminated false triggers on README/CLAUDE.md tasks. Benchmarked at 100% accuracy across 30 runs.
 
+**v0.4.3** — Extracted reference details from SKILL.md files into dedicated `references/` docs. Enhanced `release.sh` with release notes and dry-run support.
+
+**v0.4.2** — Removed confirmation gates so `/doc-manage` auto-proceeds through the full pipeline without stopping to ask.
+
+**v0.4.1** — Moved plugin files to `plugins/doc-agent/` sub-directory for clean marketplace install.
+
 **v0.4.0** — Migrated dispatch format from YAML to JSON. Added `validate-dispatch.py` hook for schema validation on every Write/Edit.
 
 **v0.3.0 ~ v0.3.2** — Migrated block list to JSON with `check-block-list.py` PreToolUse hook enforcement. Unified revision limits and citation validation standards.

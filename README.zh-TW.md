@@ -9,6 +9,12 @@
 
 **v0.4.4** — 優化 skill 描述與 pipeline 偵測邏輯。修正 MODIFY pipeline 歧義，消除 README/CLAUDE.md 的誤觸發。30 次 benchmark 測試達到 100% 準確率。
 
+**v0.4.3** — 將 SKILL.md 中的參考細節抽取至獨立的 `references/` 文件。強化 `release.sh` 支援 release notes 與 dry-run。
+
+**v0.4.2** — 移除確認閘門，讓 `/doc-manage` 自動完成整個 pipeline 不中斷。
+
+**v0.4.1** — 將外掛檔案移至 `plugins/doc-agent/` 子目錄，確保 marketplace 安裝乾淨。
+
 **v0.4.0** — Dispatch 格式從 YAML 遷移至 JSON。新增 `validate-dispatch.py` hook，在每次 Write/Edit 時驗證 schema。
 
 **v0.3.0 ~ v0.3.2** — 排除清單遷移至 JSON，新增 `check-block-list.py` PreToolUse hook 強制執行。統一修訂次數上限與引用驗證標準。
