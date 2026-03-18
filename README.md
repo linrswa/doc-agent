@@ -76,6 +76,7 @@ claude plugin install doc-agent@doc-agent
 ### Update
 
 ```bash
+claude plugin marketplace update doc-agent
 claude plugin update doc-agent@doc-agent
 ```
 
