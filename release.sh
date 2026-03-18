@@ -104,8 +104,8 @@ fi
 # --- Execute ---
 cd "$SCRIPT_DIR"
 
-sed -i '' "s/\"version\": *\"$current\"/\"version\": \"$next\"/" "$PLUGIN_JSON"
-sed -i '' "s/\"version\": *\"$current\"/\"version\": \"$next\"/" "$MARKETPLACE_JSON"
+sed -i "s/\"version\": *\"$current\"/\"version\": \"$next\"/" "$PLUGIN_JSON"
+sed -i "s/\"version\": *\"$current\"/\"version\": \"$next\"/" "$MARKETPLACE_JSON"
 git add plugins/doc-agent/.claude-plugin/plugin.json .claude-plugin/marketplace.json
 git commit -m "chore: bump version to $next"
 git tag "v$next"
@@ -114,15 +114,13 @@ git push --tags
 
 "${GH_ARGS[@]}"
 
-echo ""
-echo "Released v$next"
-echo "https://github.com/$(gh repo view --json nameWithOwner -q .nameWithOwner)/releases/tag/v$next"
+REPO_URL="https://github.com/$(gh repo view --json nameWithOwner -q .nameWithOwner)"
 
-# --- Update local plugin ---
-echo ""
-echo "Updating local plugin..."
-if claude plugin update doc-agent@doc-agent 2>&1; then
-  echo "Local plugin updated to v$next"
-else
-  echo "Warning: local plugin update failed — try manually: claude plugin update doc-agent@doc-agent"
-fi
+claude plugin marketplace update doc-agent
+claude plugin update doc-agent@doc-agent
+
+cat <<EOF
+
+Released v$next
+$REPO_URL/releases/tag/v$next
+EOF
