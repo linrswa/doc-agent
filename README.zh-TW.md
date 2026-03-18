@@ -71,6 +71,12 @@ claude plugin marketplace add linrswa/doc-agent
 claude plugin install doc-agent@doc-agent
 ```
 
+### 更新
+
+```bash
+claude plugin update doc-agent@doc-agent
+```
+
 ## 🚀 使用方式
 
 | 指令 | 功能 |
