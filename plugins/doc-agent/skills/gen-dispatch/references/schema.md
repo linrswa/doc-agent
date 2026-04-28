@@ -46,6 +46,25 @@
 | `verification_requirements` | array | Non-empty strings |
 | `acceptance_criteria` | array | Non-empty strings |
 
+## Conventions
+
+### `[delta]` prefix in `verification_requirements`
+
+Entries prefixed with `[delta]` are lifecycle-managed refactor breadcrumbs — reminders about deleted or renamed symbols that writers must not regress to. Example:
+
+```
+[delta] TriggerMaker mode enum REMOVED — interval-only, default 100ms
+[delta] EventMetadata static fields (source, event_type, roi_name) REMOVED
+```
+
+Lifecycle:
+
+1. Added by `doc-manage` UPDATE() when a refactor is detected.
+2. Preserved by `/gen-dispatch` across regenerations (see Preserve Delta Markers in gen-dispatch SKILL.md). Non-`[delta]` entries are durable facts that gen-dispatch rebuilds from code on each run, so they do not need preservation.
+3. Removed by UPDATE() once the target doc no longer references the old symbol.
+
+The validator treats `[delta]` as plain text — no schema change required, the prefix is pure markup inside a non-empty string.
+
 ## Example Output
 
 For a typical web application:

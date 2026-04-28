@@ -55,6 +55,10 @@ Verify no `repo_hints` paths match block list patterns. Remove any blocked entri
 
 Verify all `repo_hints` paths exist with Glob. If any path is missing: remove it, find the correct path, or note in the objective.
 
+### Preserve Delta Markers
+
+If `.doc-agents/dispatch.json` already exists, read it before overwriting. For each existing dispatch (matched by `module`), copy any `verification_requirements` entries prefixed with `[delta]` into the regenerated dispatch. These are refactor breadcrumbs about deleted/renamed symbols; they are not re-derivable from current code, so dropping them silently lets writers regress to the old shape. See [references/schema.md](references/schema.md#delta-prefix-in-verification_requirements) for the convention.
+
 ### Source Verification
 
 Always include `verification_requirements` to remind doc-writer:

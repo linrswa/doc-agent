@@ -303,6 +303,18 @@ review_result:
   # Noteworthy strengths
   highlights:
     - {strength 1}
+
+  # Stale entries observed in project-special-consider.md (independent of verdict)
+  # Omit the field entirely if no stale entries detected.
+  config_mismatch:
+    - type: PROJECT_SPECIAL_CONSIDER
+      severity: WARNING
+      details:
+        - field: stale_entry
+          expected: "<verbatim line from project-special-consider.md>"
+          actual: "<what code shows>"
+          evidence: "<file:line>"
+          suggestion: REMOVE | UPDATE_TO:"<text>"
 ```
 
 ## Verdict Criteria
@@ -471,6 +483,18 @@ Additionally for reviewers:
 - Check that doc-writer output follows English requirement
 - If review_request references `project-special-consider.md`, add project-specific items to your review checklist (terminology, paths, protocol/port numbers)
 - If no project-special-consider.md exists, focus on universal quality criteria and note any project-specific patterns you observe
+
+### Stale special-consider Entries (Run on Every Review)
+
+While verifying the document against code, you are already reading the relevant source files. Use that evidence to also audit `project-special-consider.md` for entries that contradict what you observed:
+
+1. **Read** `.doc-agents/project-special-consider.md` (if it exists).
+2. For each line/bullet that makes a factual claim about the codebase (tech, paths, terms, ports, conventions), check whether the code you read during this review confirms or contradicts it.
+3. **Transient directives**: if special-consider has a `## Transient` section, each entry there carries an expiry condition (e.g., "until migration to library Y is done"). Check whether the condition has been met in code.
+4. Report contradictions and met-expiry directives as `config_mismatch` with `type: PROJECT_SPECIAL_CONSIDER`, one detail per stale line. Use the `stale_entry` field format from shared-rules.md.
+5. Do **not** invent contradictions. Only flag an entry when you have a concrete `file:line` (or commit-level absence via Grep) that contradicts it. If you didn't read enough of the codebase to judge an entry, leave it alone.
+
+A stale entry is reported *alongside* (not instead of) the normal verdict. The doc can PASS while special-consider has stale entries to clean up.
 
 ## Config Mismatch Detection
 

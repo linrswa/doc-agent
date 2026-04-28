@@ -67,6 +67,37 @@ config_mismatch:
 | WARNING | Pause, ask user |
 | CRITICAL | Stop, get user decision |
 
+### PROJECT_SPECIAL_CONSIDER stale_entry sub-type
+
+When a reviewer reports `config_mismatch` with `type: PROJECT_SPECIAL_CONSIDER` and `field: stale_entry`, doc-manage handles it as a side-channel cleanup decision — independent of the doc's PASS/REVISE verdict. The detail format includes an extra `evidence` field:
+
+```yaml
+config_mismatch:
+  type: PROJECT_SPECIAL_CONSIDER
+  severity: WARNING
+  details:
+    - field: stale_entry
+      expected: "<exact text from project-special-consider.md>"
+      actual: "<what the code shows>"
+      evidence: "<file:line>"
+      suggestion: REMOVE | UPDATE_TO:"<new text>"
+```
+
+doc-manage surfaces these to the user after the REVIEW verdict has been handled, batched per review. The user picks REMOVE / UPDATE / KEEP per entry; doc-manage edits `project-special-consider.md` accordingly.
+
+### Transient section convention in project-special-consider.md
+
+Entries that the user knows up-front are time-bound (e.g., migration directives, freeze windows) belong in a `## Transient` section, with each bullet ending in an `(expires when: ...)` clause. Example:
+
+```markdown
+## Transient
+
+- Prefer Y APIs over X APIs in new docs (expires when: migration to Y is complete in src/)
+- Skip troubleshooting examples for the legacy auth path (expires when: auth-v2 ships)
+```
+
+doc-reviewer checks the expiry condition during normal review and reports met conditions as `stale_entry` mismatches. The `## Transient` heading is a convention only — `validate-dispatch.py` does not see it (special-consider.md has no validator).
+
 ## Error Handling
 
 | Situation | Action |

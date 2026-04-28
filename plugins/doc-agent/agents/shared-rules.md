@@ -156,6 +156,7 @@ While working with the codebase, if you discover that the actual implementation 
 | Tech stack change | New framework/library in use | INFO |
 | Architecture change | Different pattern than described | CRITICAL |
 | Terminology change | Key terms renamed in codebase | WARNING |
+| Stale entry (special-consider) | A `project-special-consider.md` line is contradicted by current code, or a Transient directive's expiry condition has been met | WARNING |
 
 ### Mismatch Report Format
 
@@ -171,6 +172,26 @@ config_mismatch:
 ```
 
 **Do NOT silently work around mismatches.** Doc-manager needs this information to decide whether to update config files.
+
+### Stale-Entry Reporting (PROJECT_SPECIAL_CONSIDER)
+
+Each entry in a `PROJECT_SPECIAL_CONSIDER` mismatch with a stale-entry detail MUST include enough evidence for doc-manage to decide cleanup without re-investigating:
+
+```yaml
+config_mismatch:
+  type: PROJECT_SPECIAL_CONSIDER
+  severity: WARNING
+  details:
+    - field: stale_entry
+      expected: "<exact text of the line in project-special-consider.md>"
+      actual: "<what the code actually shows>"
+      evidence: "<file:line citation that contradicts the entry>"
+      suggestion: REMOVE | UPDATE_TO:"<new text>"
+```
+
+`field: stale_entry` is the marker that distinguishes this from path/tech-stack/architecture mismatches — those describe drift in dispatch.json scope or the repo as a whole, while `stale_entry` targets one specific line in special-consider.md.
+
+A stale entry does NOT block the doc verdict. Report it as a side-channel finding even when the doc itself PASSES.
 
 ## Project-Specific Considerations
 

@@ -81,6 +81,8 @@ Sync `.doc-agents/dispatch.json` and `.doc-agents/project-special-consider.md` w
 - **If config files missing**: suggest creating them
 - Analyze codebase structure → compare with configs → auto-apply non-destructive updates
 - For `dispatch.json` drift: re-run `/gen-dispatch`; for special-consider drift: edit directly
+- When recording a "X was renamed/removed" reminder in `verification_requirements`, prefix it with `[delta]` so it can be cleaned up once absorbed into the target doc. See [verification_requirements entry classes](#verification_requirements-entry-classes).
+- Before writing `dispatch.json`, validate the proposed content against `validate-dispatch.py` rules — particularly the `scope_in` cap of 6 items. If a change would exceed the cap, surface to the user and propose consolidation (merge ≥2 bullets into a higher-level category) or splitting the module — do not append past the cap and rely on the Write hook to catch it later.
 - Only stop and ask on CRITICAL mismatch or destructive update
 
 ### WRITE(module, [extra_context])
@@ -100,6 +102,7 @@ Requires target document to exist.
 2. TaskUpdate: phase `"reviewing"`
 3. Dispatch via Agent tool (`subagent_type: "doc-agent:doc-reviewer"`) with review request
 4. Check response for config mismatch reports
+5. **Handle stale_entry mismatches**: if response includes `config_mismatch` with `type: PROJECT_SPECIAL_CONSIDER` and `field: stale_entry`, surface each entry to the user (with `evidence` citation) and ask REMOVE / UPDATE / KEEP per entry. Apply confirmed edits to `project-special-consider.md`. This runs *after* handling the doc verdict — staleness does not block PASS. See [verification_requirements entry classes](#verification_requirements-entry-classes) for the analogous mechanism on the dispatch side.
 
 ---
 
@@ -107,9 +110,19 @@ Requires target document to exist.
 
 For dispatch format, review request format, task status mapping, config mismatch handling, and error handling details, see [references/formats.md](references/formats.md).
 
+### verification_requirements entry classes
+
+Two lifecycle classes, both stored as strings in the same array:
+
+- **Durable** (no prefix): current-state facts re-derivable by `/gen-dispatch` from code — e.g., `"Line numbers must be accurate (within 5 lines tolerance)"`, `"ZMQ ports are GLOBAL (5560, 5561, 5562)"`. Rebuilt on regenerate; no explicit cleanup needed.
+- **Delta** (`[delta]` prefix): refactor breadcrumb about a deleted/renamed symbol that writers must not regress to — e.g., `[delta] TriggerMaker mode enum REMOVED — interval-only, default 100ms`. NOT re-derivable from current code, so `/gen-dispatch` preserves these entries across regenerations. Removable once the target doc no longer references the old symbol; surface as a candidate for cleanup during UPDATE().
+
+The `[delta]` marker is plain text — `validate-dispatch.py` does not enforce it. Both classes are equally authoritative during WRITE/REVIEW.
+
 ### Rules
 
 - **Max 2 revisions** per module. 3rd REVISE > auto-block and ask user.
 - **All documentation** in English.
 - **Response format**: After each operation, report ACTION, DETAILS, NEXT_STEP, and use `TaskList` to show progress.
 - **Project-specific considerations**: If `.doc-agents/project-special-consider.md` doesn't exist, create during first cycle with: tech stack, architecture patterns, key terminology, important directories, conventions.
+- **Transient directives**: time-bound items (migration nudges, freeze windows) belong under a `## Transient` section in `project-special-consider.md`, each with an `(expires when: ...)` clause. doc-reviewer checks expiry conditions during normal review and reports met ones as `stale_entry` mismatches for cleanup. See [references/formats.md](references/formats.md#transient-section-convention-in-project-special-considermd).
