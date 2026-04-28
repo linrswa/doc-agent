@@ -7,6 +7,8 @@
 
 ## 📢 近期更新
 
+**v0.5.0** — 為 `.doc-agents/` 設定檔加入生命週期機制：`verification_requirements` 的 `[delta]` 前綴慣例（跨 `/gen-dispatch` regen 保留）、`UPDATE()` 寫入前的 in-memory `scope_in` 上限驗證、doc-reviewer 在每次 review 時稽核 `project-special-consider.md` 的過時條目（附 `file:line` 證據），以及 `## Transient` 區段慣例搭配 `(expires when: ...)` 結束條件。
+
 **v0.4.4** — 優化 skill 描述與 pipeline 偵測邏輯。修正 MODIFY pipeline 歧義，消除 README/CLAUDE.md 的誤觸發。30 次 benchmark 測試達到 100% 準確率。
 
 **v0.4.3** — 將 SKILL.md 中的參考細節抽取至獨立的 `references/` 文件。強化 `release.sh` 支援 release notes 與 dry-run。

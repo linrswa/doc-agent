@@ -9,6 +9,8 @@ Automatically manage documentation with multiple agents — bridging the gap bet
 
 ## 📢 Recent Updates
 
+**v0.5.0** — Added lifecycle mechanisms for `.doc-agents/` config files: `[delta]` prefix convention for `verification_requirements` (preserved across `/gen-dispatch` regenerations), in-memory `scope_in` cap validation in `UPDATE()`, doc-reviewer audit of `project-special-consider.md` for stale entries with `file:line` evidence, and `## Transient` section convention with `(expires when: ...)` clauses.
+
 **v0.4.4** — Optimized skill descriptions and pipeline detection. Fixed MODIFY pipeline ambiguity, eliminated false triggers on README/CLAUDE.md tasks. Benchmarked at 100% accuracy across 30 runs.
 
 **v0.4.3** — Extracted reference details from SKILL.md files into dedicated `references/` docs. Enhanced `release.sh` with release notes and dry-run support.
